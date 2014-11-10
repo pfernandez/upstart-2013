@@ -287,7 +287,6 @@ blockquote p:before {
 .header-left {
 	width: calc(100% - 30px) !important;
     min-width: 225px;
-    max-width: 400px;
 }
 
 .header-left h1 {
