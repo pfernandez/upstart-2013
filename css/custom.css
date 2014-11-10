@@ -285,7 +285,7 @@ blockquote p:before {
 }
 
 .header-left {
-    width: 45% !important;
+	width: calc(100% - 30px) !important;
     min-width: 225px;
     max-width: 400px;
 }
@@ -293,6 +293,7 @@ blockquote p:before {
 .header-left h1 {
     width: 248px;
     padding-top: 22px;
+    margin: 0 auto;
 }
 
 .header-right h2 {
@@ -880,6 +881,10 @@ div.tb_tweetlist {
 
     .header-right h2 {
         display: block;
+    }
+    
+    .header-left {
+    	width: 45% !important;
     }
 
     .post-type-header h2 {
