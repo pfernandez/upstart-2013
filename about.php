@@ -27,7 +27,9 @@
             $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
             $args = array(
                 'post_type' => 'ucl_agent',
-                'paged' => $paged
+                'paged'     => $paged,
+                'orderby'   => 'menu_order',
+                'order'     => 'ASC',
             );
             global $wp_query;
             $temp = $wp_query; // store original query for later use

@@ -337,6 +337,30 @@ add_filter( 'manage_edit-ucl_book_columns', 'uc_book_add_columns' );
 add_action( 'manage_ucl_book_posts_custom_column' , 'uc_book_get_column_value', 10, 2 );
 
 
+// Customizations for the Metronet Reorder Podt Types plugin.
+function uc_reorder_custom_post_types( $post_types ) {
+    $post_types = array( 'ucl_agent' );
+    return $post_types;
+}
+function uc_reorder_page_css() {
+	echo '<style>
+		.ucl_agent_page_reorder-ucl_agent .wrap h2 {
+			display: none;
+		}
+		.ucl_agent_page_reorder-ucl_agent .wrap::before {
+			content: "Order to display agents on About page:";
+			display: block;
+			font-size: 18px;
+			font-weight: 400;
+			padding: 9px 15px 4px 0;
+			line-height: 29px;
+		}
+	</style>';
+}
+add_filter( 'metronet_reorder_post_types', 'uc_reorder_custom_post_types' );
+add_action('admin_head', 'uc_reorder_page_css');
+
+
 // Custom fields for the Author content type.
 function uc_author_metaboxes( $meta_boxes ) {
 	$prefix = '_uc_'; // Prefix for all fields
