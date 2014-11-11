@@ -320,6 +320,23 @@ add_filter('manage_edit-ucl_agent_columns', 'add_new_post_type_columns');
 add_filter('manage_edit-ucl_author_columns', 'add_new_post_type_columns');
 
 
+// Add custom columns to the Book panel.
+function uc_book_add_columns( $columns, $post_id ) {
+    $columns['in_carousel'] = __( 'Homepage Carousel' );
+    return $columns;
+}
+function uc_book_get_column_value( $column, $post_id ) {
+    switch ( $column ) {
+		case 'in_carousel' :
+			echo get_post_meta( $post_id , '_uc_in_carousel' , true ); 
+			break;
+    }
+    
+}
+add_filter( 'manage_edit-ucl_book_columns', 'uc_book_add_columns' );
+add_action( 'manage_ucl_book_posts_custom_column' , 'uc_book_get_column_value', 10, 2 );
+
+
 // Custom fields for the Author content type.
 function uc_author_metaboxes( $meta_boxes ) {
 	$prefix = '_uc_'; // Prefix for all fields
@@ -441,6 +458,12 @@ function uc_book_metaboxes( $meta_boxes ) {
 	            'taxonomy' => 'book_category',
 	            'type' => 'taxonomy_multicheck',	
             ),
+            array(
+				'name'    => 'Homepage Carousel',
+				'desc'    => 'Show the cover on the home page slider (max 10 shown, ordered by date).',
+				'id' => $prefix . 'in_carousel',
+				'type' => 'checkbox'
+			),
         )
 	);
 
@@ -558,7 +581,7 @@ function remove_parent_widget_areas() {
 add_action( 'widgets_init', 'remove_parent_widget_areas', 11 );
 
 
-// [agents_accepting_submissions] shortcode to display Agent fields when accepting book subissions.
+// [agents_accepting_submissions] shortcode to display Agent fields when accepting book submissions.
 function agents_accepting_submissions_shortcode() {
 
     $result = '';

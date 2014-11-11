@@ -12,12 +12,21 @@ Template Name: Upstart Crow Homepage
     
         <h2 id="our-clients-books" class="h3" >Our Clients' Books</h2>
         
-        <div id="home-books-wrapper" class="fade-in-opacity"> 
+        <div id="home-books-wrapper" class="fade-in-opacity">
             <div id="home-books">
                 <ul class="slides">
                 
                     <?php
-                        $args = array( 'post_type' => 'ucl_book', 'posts_per_page' => 10 );
+                        $args = array( 
+                        	'post_type' => 'ucl_book', 
+                        	'posts_per_page' => 10,
+                        	'meta_query' => array(
+								array(
+									'key'     => '_uc_in_carousel',
+									'value'   => 'on',
+								),
+							),
+                        );
                         $query = new WP_Query( $args );
                     ?>
 
@@ -38,7 +47,6 @@ Template Name: Upstart Crow Homepage
                             <a class="blog-image" href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
                                 <?php echo $image; ?>
                             </a>
-                           
                         </li>
                     <?php } ?>
 
