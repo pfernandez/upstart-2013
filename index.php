@@ -2,6 +2,7 @@
 
 			<div class="container">					
 				<div class="page-title clearfix">
+					<?php get_search_form(); ?>
 					<?php if( is_search() ) { ?>
 						<h2><?php printf( __( 'Search Results for: %s', 'okay' ), '<span>' . get_search_query() . '</span>' ); ?></h2>
 					<?php } else if( is_tag() ) { ?>
@@ -30,8 +31,6 @@
 							echo '<h3>' . get_post_meta($page_id, 'subtitle', true) . '</h3>';
 						}
 					?>
-					
-					<?php get_search_form(); ?>
 				</div>
 					
 				<div class="content">

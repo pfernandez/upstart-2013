@@ -16,6 +16,37 @@
 
 
 /**
+ * Show a special message to non-whitelisted users instead of the regular site.
+ * To activate maintenance mode, uncomment the add_action() line below.
+ */
+//add_action('wp_head', 'simple_maintenance_mode');
+function simple_maintenance_mode() {
+ 
+    $user_name = wp_get_current_user()->user_login;
+    $ip = $_SERVER['REMOTE_ADDR'];
+    
+    $user_is_dev = (
+        current_user_can( 'update_themes' )
+        // || $user_name == 'test1'
+        // || $ip == '00.000.000.000'  
+    );
+    
+    if( ! $user_is_dev ) {
+?>
+	</head>	
+	<body>
+		<div style="margin: 100px auto; width: 450px; text-align: center;">
+		    <h1 style="font-size: 100px; margin-bottom: 50px;">Sit tight.</h1>
+		    <h2>We're upgrading and will be back on line soon.</h2>
+		</div>
+	</body>
+<?php
+        exit;
+    }
+}
+
+
+/**
  * Register and enqueue the requred CSS and Javascript.
  */
 function custom_styles_scripts() {

@@ -22,8 +22,8 @@ if( $cat_slug ) {
 <div id="blog-page" class="container">
 
 	<div class="page-title clearfix">
-		<h2><a href="<?php echo site_url(); ?>/blog"><?php the_title(); ?></a><?php echo $cat_string; ?></h2>
 		<?php get_search_form(); ?>
+		<h2><a href="<?php echo site_url(); ?>/blog"><?php the_title(); ?></a><?php echo $cat_string; ?></h2>
 	</div>
 	
 	<div class="content">
