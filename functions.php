@@ -3,14 +3,14 @@
  * Custom functions that load before the parent theme's functions.php file.
  */
 
-         /*/ DEBUGGING BLOCK //////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////
-       //                                                                             //
-           $var = is_home();
-           echo "<pre style='font:14px Courier; padding:10px; border-radius:10px;";
-           echo "color:#0E0; -webkit-box-shadow: 0 0 12px #000; margin:20px 0;";
-           echo "background:rgba(0,0,0,.8);'>"; var_dump($var); echo "</pre>";
-  //                                                                             //
+		 /*/ DEBUGGING BLOCK //////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////
+	   //																			  //
+		   $var = is_home();
+		   echo "<pre style='font:14px Courier; padding:10px; border-radius:10px;";
+		   echo "color:#0E0; -webkit-box-shadow: 0 0 12px #000; margin:20px 0;";
+		   echo "background:rgba(0,0,0,.9);'>"; var_dump($var); echo "</pre>";
+  //																			 //
  /////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////*/
 
@@ -21,28 +21,28 @@
  */
 //add_action('wp_head', 'simple_maintenance_mode');
 function simple_maintenance_mode() {
- 
-    $user_name = wp_get_current_user()->user_login;
-    $ip = $_SERVER['REMOTE_ADDR'];
-    
-    $user_is_dev = (
-        current_user_can( 'update_themes' )
-        // || $user_name == 'test1'
-        // || $ip == '00.000.000.000'  
-    );
-    
-    if( ! $user_is_dev ) {
+
+	$user_name = wp_get_current_user()->user_login;
+	$ip = $_SERVER['REMOTE_ADDR'];
+
+	$user_is_dev = (
+		current_user_can( 'update_themes' )
+		// || $user_name == 'test1'
+		// || $ip == '00.000.000.000'
+	);
+
+	if( ! $user_is_dev ) {
 ?>
-	</head>	
+	</head>
 	<body>
 		<div style="margin: 100px auto; width: 450px; text-align: center;">
-		    <h1 style="font-size: 100px; margin-bottom: 50px;">Sit tight.</h1>
-		    <h2>We're upgrading and will be back on line soon.</h2>
+			<h1 style="font-size: 100px; margin-bottom: 50px;">Sit tight.</h1>
+			<h2>We're upgrading and will be back on line soon.</h2>
 		</div>
 	</body>
 <?php
-        exit;
-    }
+		exit;
+	}
 }
 
 
@@ -51,34 +51,34 @@ function simple_maintenance_mode() {
  */
 function custom_styles_scripts() {
 
-    $theme_uri = get_stylesheet_directory_uri();
+	$theme_uri = get_stylesheet_directory_uri();
 
-    // CSS for the parent theme.
-    wp_register_style( 'parent-css', get_template_directory_uri() . '/style.css' );
-    wp_enqueue_style( 'parent-css' );
-    
-    // Our style.css file, which inherits the parent theme's CSS.
-    wp_register_style(
-        'child-css',
-        $theme_uri . '/css/custom.css',
-        array( 'parent-css', 'media-queries-css', 'tb-css', 'flex-css' )
-    );
-    wp_enqueue_style( 'child-css' );
-    
-    // Scripts that will appear in the header.
-    // wp_register_script( 'typekit', 'http://use.typekit.net/fah7euc.js' );
-    // wp_enqueue_script( 'typekit' );
-    
-    // Scripts that will appear in the footer.
-    wp_register_script(
-        'child-custom-js',
-        $theme_uri . '/js/custom.js',
-        array( 'jquery' ),
-        false,
-        true
-    );
+	// CSS for the parent theme.
+	wp_register_style( 'parent-css', get_template_directory_uri() . '/style.css' );
+	wp_enqueue_style( 'parent-css' );
+
+	// Our style.css file, which inherits the parent theme's CSS.
+	wp_register_style(
+		'child-css',
+		$theme_uri . '/css/custom.css',
+		array( 'parent-css', 'media-queries-css', 'tb-css', 'flex-css' )
+	);
+	wp_enqueue_style( 'child-css' );
+
+	// Scripts that will appear in the header.
+	// wp_register_script( 'typekit', 'http://use.typekit.net/fah7euc.js' );
+	// wp_enqueue_script( 'typekit' );
+
+	// Scripts that will appear in the footer.
+	wp_register_script(
+		'child-custom-js',
+		$theme_uri . '/js/custom.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
 	wp_enqueue_script( 'child-custom-js' );
-	
+
 	// Make some PHP data available to our custom Javascript file.
 	$data = array( 'url' => __( $theme_uri ) );
 	wp_localize_script('child-custom-js', 'SiteData', $data);
@@ -86,79 +86,93 @@ function custom_styles_scripts() {
 add_action( 'wp_enqueue_scripts', 'custom_styles_scripts' );
 
 
+// Revert to the classic editor.
+add_filter('use_block_editor_for_post', '__return_false');
+
+
 // Add theme support for HTML5 search forms.
 add_theme_support( 'html5', array( 'search-form' ) );
 
 
 function my_search_form( $form ) {
-    $form = '<form role="search" method="get" id="searchform" class="searchform" action="' . home_url( '/' ) . '" >
-    <div><label class="screen-reader-text" for="s">' . __( 'Search for:' ) . '</label>
-    <input type="text" value="' . get_search_query() . '" name="s" id="s" placeholder="Search" />
-    <input type="submit" id="searchsubmit" value="'. esc_attr__( 'Search' ) .'" />
-    </div>
-    </form>';
+	$form = '<form role="search" method="get" id="searchform" class="searchform" action="' . home_url( '/' ) . '" >
+	<div><label class="screen-reader-text" for="s">' . __( 'Search for:' ) . '</label>
+	<input type="text" value="' . get_search_query() . '" name="s" id="s" placeholder="Search" />
+	<input type="submit" id="searchsubmit" value="'. esc_attr__( 'Search' ) .'" />
+	</div>
+	</form>';
 
-    return $form;
+	return $form;
 }
 add_filter( 'get_search_form', 'my_search_form' );
 
 
 // Customize excerpt length.
 function custom_excerpt_length( $length ) {
-    if( is_page_template( 'home.php' ) ) {
-	    if( in_category( 'news' ) ) {
-	        return 18;
-	    }
-	    else return 36;
+	if( is_page_template( 'home.php' ) ) {
+		if( in_category( 'news' ) ) {
+			return 18;
+		}
+		else return 36;
 	}
-	return 185;
+	return 135;
 }
 add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
 
 
 // Add the [Read More] link to excerpts on the Blog page.
 function custom_excerpt_more( $more ) {
-    return '... <div class="read-more"><a href="'. get_permalink( get_the_ID() ) . '">Read More>></a></div>';
+	return '... <div class="read-more"><a href="'. get_permalink( get_the_ID() )
+		. '">Read More>></a></div>';
 }
 add_filter( 'excerpt_more', 'custom_excerpt_more' );
 
 
 // Returns a link that uses javascript to safely access an email address.
 function get_safe_email( $email_address, $link_text ) {
-    $arr = explode( '@', $email_address, 2 );
-    return '<a onclick="p1=\'' . $arr[0] . '\'; p2=\''
-        . $arr[1] . '\'; this.href=\'mailto:\' + p1 + \'@\' + p2" href="#"'
-        . 'rel="nofollow">' . $link_text . '</a>';
+	$arr = explode( '@', $email_address, 2 );
+	return '<a onclick="p1=\'' . $arr[0] . '\'; p2=\''
+		. $arr[1] . '\'; this.href=\'mailto:\' + p1 + \'@\' + p2" href="#"'
+		. 'rel="nofollow">' . $link_text . '</a>';
+}
+
+
+// Returns a link that safely copies email to the clipboard.
+function get_safe_email_copy_link( $email_address, $link_text ) {
+  $arr = explode( '@', $email_address, 2 );
+  return '<a onclick="p1=\'' . $arr[0] . '\'; p2=\'' . $arr[1] . '\';'
+    . 'copyToClipboard(p1 + \'@\' + p2); return false;" href="#">'
+    . $link_text . '</a>';
 }
 
 
 // Register Custom Taxonomy
-function book_genre_taxonomy()  {
+function book_genre_taxonomy()	{
 
 	$labels = array(
-		'name'                       => _x( 'Book Genres', 'Taxonomy General Name', 'okay' ),
-		'singular_name'              => _x( 'Book Genre', 'Taxonomy Singular Name', 'okay' ),
-		'menu_name'                  => __( 'Book Genres', 'okay' ),
-		'all_items'                  => __( 'All Genres', 'okay' ),
-		'parent_item'                => __( 'Parent Genre', 'okay' ),
-		'parent_item_colon'          => __( 'Parent Genre:', 'okay' ),
-		'new_item_name'              => __( 'New Genre Name', 'okay' ),
-		'add_new_item'               => __( 'Add New Genre', 'okay' ),
-		'edit_item'                  => __( 'Edit Genre', 'okay' ),
-		'update_item'                => __( 'Update Genre', 'okay' ),
+		'name'						 => _x( 'Book Genres', 'Taxonomy General Name', 'okay' ),
+		'singular_name'				 => _x( 'Book Genre', 'Taxonomy Singular Name', 'okay' ),
+		'menu_name'					 => __( 'Book Genres', 'okay' ),
+		'all_items'					 => __( 'All Genres', 'okay' ),
+		'parent_item'				 => __( 'Parent Genre', 'okay' ),
+		'parent_item_colon'			 => __( 'Parent Genre:', 'okay' ),
+		'new_item_name'				 => __( 'New Genre Name', 'okay' ),
+		'add_new_item'				 => __( 'Add New Genre', 'okay' ),
+		'edit_item'					 => __( 'Edit Genre', 'okay' ),
+		'update_item'				 => __( 'Update Genre', 'okay' ),
 		'separate_items_with_commas' => __( 'Separate genres with commas', 'okay' ),
-		'search_items'               => __( 'Search genres', 'okay' ),
-		'add_or_remove_items'        => __( 'Add or remove genres', 'okay' ),
-		'choose_from_most_used'      => __( 'Choose from the most used genres', 'okay' ),
+		'search_items'				 => __( 'Search genres', 'okay' ),
+		'add_or_remove_items'		 => __( 'Add or remove genres', 'okay' ),
+		'choose_from_most_used'		 => __( 'Choose from the most used genres', 'okay' ),
 	);
 	$args = array(
-		'labels'                     => $labels,
-		'hierarchical'               => true,
-		'public'                     => true,
-		'show_ui'                    => true,
-		'show_admin_column'          => true,
-		'show_in_nav_menus'          => true,
-		'show_tagcloud'              => true,
+		'labels'					 => $labels,
+		'hierarchical'				 => true,
+		'public'					 => true,
+		'show_ui'					 => true,
+		'show_admin_column'			 => true,
+		'show_in_nav_menus'			 => true,
+		'show_tagcloud'				 => true,
 	);
 	register_taxonomy( 'book_category', 'custom_post_type', $args );
 
@@ -167,32 +181,32 @@ add_action( 'init', 'book_genre_taxonomy', 0 );
 
 
 // Register Custom Taxonomy
-function book_series_taxonomy()  {
+function book_series_taxonomy()	 {
 
 	$labels = array(
-		'name'                       => _x( 'Book Series', 'Taxonomy General Name', 'okay' ),
-		'singular_name'              => _x( 'Book Series', 'Taxonomy Singular Name', 'okay' ),
-		'menu_name'                  => __( 'Book Series', 'okay' ),
-		'all_items'                  => __( 'All Book Series', 'okay' ),
-		'parent_item'                => __( 'Parent Book Series', 'okay' ),
-		'parent_item_colon'          => __( 'Parent Book Series:', 'okay' ),
-		'new_item_name'              => __( 'New Book Series Name', 'okay' ),
-		'add_new_item'               => __( 'Add New Book Series', 'okay' ),
-		'edit_item'                  => __( 'Edit Book Series', 'okay' ),
-		'update_item'                => __( 'Update Book Series', 'okay' ),
+		'name'						 => _x( 'Book Series', 'Taxonomy General Name', 'okay' ),
+		'singular_name'				 => _x( 'Book Series', 'Taxonomy Singular Name', 'okay' ),
+		'menu_name'					 => __( 'Book Series', 'okay' ),
+		'all_items'					 => __( 'All Book Series', 'okay' ),
+		'parent_item'				 => __( 'Parent Book Series', 'okay' ),
+		'parent_item_colon'			 => __( 'Parent Book Series:', 'okay' ),
+		'new_item_name'				 => __( 'New Book Series Name', 'okay' ),
+		'add_new_item'				 => __( 'Add New Book Series', 'okay' ),
+		'edit_item'					 => __( 'Edit Book Series', 'okay' ),
+		'update_item'				 => __( 'Update Book Series', 'okay' ),
 		'separate_items_with_commas' => __( 'The series the book is a part of, if any.', 'okay' ),
-		'search_items'               => __( 'Search series', 'okay' ),
-		'add_or_remove_items'        => __( 'Add or remove series', 'okay' ),
-		'choose_from_most_used'      => __( 'Choose from the most used series', 'okay' ),
+		'search_items'				 => __( 'Search series', 'okay' ),
+		'add_or_remove_items'		 => __( 'Add or remove series', 'okay' ),
+		'choose_from_most_used'		 => __( 'Choose from the most used series', 'okay' ),
 	);
 	$args = array(
-		'labels'                     => $labels,
-		'hierarchical'               => false,
-		'public'                     => true,
-		'show_ui'                    => true,
-		'show_admin_column'          => true,
-		'show_in_nav_menus'          => true,
-		'show_tagcloud'              => false,
+		'labels'					 => $labels,
+		'hierarchical'				 => false,
+		'public'					 => true,
+		'show_ui'					 => true,
+		'show_admin_column'			 => true,
+		'show_in_nav_menus'			 => true,
+		'show_tagcloud'				 => false,
 	);
 	register_taxonomy( 'book_series', 'custom_post_type', $args );
 
@@ -203,140 +217,140 @@ add_action( 'init', 'book_series_taxonomy', 0 );
 // Add Book post type.
 add_action('init', 'cptui_register_my_cpt_book');
 function cptui_register_my_cpt_book() {
-    register_post_type('ucl_book', array(
-        'label' => 'Books',
-        'description' => 'Books written by the agency\'s Authors.',
-        'public' => true,
-        'show_ui' => true,
-        'show_in_menu' => true,
-        'capability_type' => 'post',
-        'map_meta_cap' => true,
-        'hierarchical' => false,
-        'has_archive' => true,
-        'rewrite' => array('slug' => 'book', 'with_front' => true),
-        'query_var' => true,
-        'supports' => array('title','revisions'),
-        'taxonomies' => array( 'book_category', 'book_series' ),
-        'labels' => array (
-            'name' => 'Books',
-            'singular_name' => 'Book',
-            'menu_name' => 'Books',
-            'add_new' => 'Add Book',
-            'add_new_item' => 'Add New Book',
-            'edit' => 'Edit',
-            'edit_item' => 'Edit Book',
-            'new_item' => 'New Book',
-            'view' => 'View Book',
-            'view_item' => 'View Book',
-            'search_items' => 'Search Books',
-            'not_found' => 'No Books Found',
-            'not_found_in_trash' => 'No Books Found in Trash',
-            'parent' => 'Parent Book',
-        )
-    ) );
+	register_post_type('ucl_book', array(
+		'label' => 'Books',
+		'description' => 'Books written by the agency\'s Authors.',
+		'public' => true,
+		'show_ui' => true,
+		'show_in_menu' => true,
+		'capability_type' => 'post',
+		'map_meta_cap' => true,
+		'hierarchical' => false,
+		'has_archive' => true,
+		'rewrite' => array('slug' => 'book', 'with_front' => true),
+		'query_var' => true,
+		'supports' => array('title','revisions'),
+		'taxonomies' => array( 'book_category', 'book_series' ),
+		'labels' => array (
+			'name' => 'Books',
+			'singular_name' => 'Book',
+			'menu_name' => 'Books',
+			'add_new' => 'Add Book',
+			'add_new_item' => 'Add New Book',
+			'edit' => 'Edit',
+			'edit_item' => 'Edit Book',
+			'new_item' => 'New Book',
+			'view' => 'View Book',
+			'view_item' => 'View Book',
+			'search_items' => 'Search Books',
+			'not_found' => 'No Books Found',
+			'not_found_in_trash' => 'No Books Found in Trash',
+			'parent' => 'Parent Book',
+		)
+	) );
 }
 
 
 // Add Author post type.
 add_action('init', 'cptui_register_my_cpt_author');
 function cptui_register_my_cpt_author() {
-    register_post_type('ucl_author', array(
-        'label' => 'Authors',
-        'description' => 'An author managed by this agency.',
-        'public' => true,
-        'show_ui' => true,
-        'show_in_menu' => true,
-        'capability_type' => 'post',
-        'map_meta_cap' => true,
-        'hierarchical' => false,
-        'has_archive' => true,
-        'rewrite' => array('slug' => 'author', 'with_front' => true),
-        'query_var' => true,
-        'supports' => array('title','revisions'),
-        'labels' => array (
-            'name' => 'Authors',
-            'singular_name' => 'Author',
-            'menu_name' => 'Authors',
-            'add_new' => 'Add Author',
-            'add_new_item' => 'Add New Author',
-            'edit' => 'Edit',
-            'edit_item' => 'Edit Author',
-            'new_item' => 'New Author',
-            'view' => 'View Author',
-            'view_item' => 'View Author',
-            'search_items' => 'Search Authors',
-            'not_found' => 'No Authors Found',
-            'not_found_in_trash' => 'No Authors Found in Trash',
-            'parent' => 'Parent Author',
-        )
-    ) );
+	register_post_type('ucl_author', array(
+		'label' => 'Authors',
+		'description' => 'An author managed by this agency.',
+		'public' => true,
+		'show_ui' => true,
+		'show_in_menu' => true,
+		'capability_type' => 'post',
+		'map_meta_cap' => true,
+		'hierarchical' => false,
+		'has_archive' => true,
+		'rewrite' => array('slug' => 'author', 'with_front' => true),
+		'query_var' => true,
+		'supports' => array('title','revisions'),
+		'labels' => array (
+			'name' => 'Authors',
+			'singular_name' => 'Author',
+			'menu_name' => 'Authors',
+			'add_new' => 'Add Author',
+			'add_new_item' => 'Add New Author',
+			'edit' => 'Edit',
+			'edit_item' => 'Edit Author',
+			'new_item' => 'New Author',
+			'view' => 'View Author',
+			'view_item' => 'View Author',
+			'search_items' => 'Search Authors',
+			'not_found' => 'No Authors Found',
+			'not_found_in_trash' => 'No Authors Found in Trash',
+			'parent' => 'Parent Author',
+		)
+	) );
 }
 
 
 // Add Agent post type.
 add_action('init', 'cptui_register_my_cpt_agent');
 function cptui_register_my_cpt_agent() {
-    register_post_type('ucl_agent', array(
-        'label' => 'Agents',
-        'description' => 'Upstart Crow literary agents.',
-        'public' => true,
-        'show_ui' => true,
-        'show_in_menu' => true,
-        'capability_type' => 'post',
-        'map_meta_cap' => true,
-        'hierarchical' => false,
-        'has_archive' => true,
-        'rewrite' => array('slug' => 'agent', 'with_front' => true),
-        'query_var' => true,
-        'supports' => array('title','revisions','page-attributes'),
-        'labels' => array (
-            'name' => 'Agents',
-            'singular_name' => 'Agent',
-            'menu_name' => 'Agents',
-            'add_new' => 'Add Agent',
-            'add_new_item' => 'Add New Agent',
-            'edit' => 'Edit',
-            'edit_item' => 'Edit Agent',
-            'new_item' => 'New Agent',
-            'view' => 'View Agent',
-            'view_item' => 'View Agent',
-            'search_items' => 'Search Agents',
-            'not_found' => 'No Agents Found',
-            'not_found_in_trash' => 'No Agents Found in Trash',
-            'parent' => 'Parent Agent',
-        )
-    ) );
+	register_post_type('ucl_agent', array(
+		'label' => 'Agents',
+		'description' => 'Upstart Crow literary agents.',
+		'public' => true,
+		'show_ui' => true,
+		'show_in_menu' => true,
+		'capability_type' => 'post',
+		'map_meta_cap' => true,
+		'hierarchical' => false,
+		'has_archive' => true,
+		'rewrite' => array('slug' => 'agent', 'with_front' => true),
+		'query_var' => true,
+		'supports' => array('title','revisions','page-attributes'),
+		'labels' => array (
+			'name' => 'Agents',
+			'singular_name' => 'Agent',
+			'menu_name' => 'Agents',
+			'add_new' => 'Add Agent',
+			'add_new_item' => 'Add New Agent',
+			'edit' => 'Edit',
+			'edit_item' => 'Edit Agent',
+			'new_item' => 'New Agent',
+			'view' => 'View Agent',
+			'view_item' => 'View Agent',
+			'search_items' => 'Search Agents',
+			'not_found' => 'No Agents Found',
+			'not_found_in_trash' => 'No Agents Found in Trash',
+			'parent' => 'Parent Agent',
+		)
+	) );
 }
 
 // Replace "Enter title here" for custom post types.
 function uc_custom_title_text( $translation, $text, $domain ) {
 
 	global $post;
-    if ( ! isset( $post->post_type ) )
-        return $translation;
-    
-    $temp = get_translations_for_domain( $domain );
+	if ( ! isset( $post->post_type ) )
+		return $translation;
+
+	$temp = get_translations_for_domain( $domain );
 	$translations = &$temp;
 	$translation_array = array();
- 
+
 	switch ($post->post_type) {
-	
+
 		case 'ucl_agent': // custom post type name
 			$translation_array = array(
 				'Enter title here' => 'Enter agent name here'
 			);
 			break;
-			
+
 		case 'ucl_author':
 			$translation_array = array(
 				'Enter title here' => 'Enter author name here'
 			);
 			break;
 	}
- 
+
 	if ( array_key_exists( $text, $translation_array ) )
 		return $translations->translate( $translation_array[$text] );
-	
+
 	return $translation;
 }
 add_filter('gettext', 'uc_custom_title_text', 10, 4);
@@ -344,25 +358,25 @@ add_filter('gettext', 'uc_custom_title_text', 10, 4);
 
 // Add custom columns to the Author and Agent panels.
 function add_new_post_type_columns( $columns ) {
-    $columns['title'] = _x('Name', 'column name');
-    return $columns;
+	$columns['title'] = _x('Name', 'column name');
+	return $columns;
 }
 add_filter('manage_edit-ucl_agent_columns', 'add_new_post_type_columns');
 add_filter('manage_edit-ucl_author_columns', 'add_new_post_type_columns');
 
 
 // Add custom columns to the Book panel.
-function uc_book_add_columns( $columns, $post_id ) {
-    $columns['in_carousel'] = __( 'Homepage Carousel' );
-    return $columns;
+function uc_book_add_columns( $columns ) {
+	$columns['in_carousel'] = __( 'Homepage Carousel' );
+	return $columns;
 }
 function uc_book_get_column_value( $column, $post_id ) {
-    switch ( $column ) {
+	switch ( $column ) {
 		case 'in_carousel' :
-			echo get_post_meta( $post_id , '_uc_in_carousel' , true ); 
+			echo get_post_meta( $post_id , '_uc_in_carousel' , true );
 			break;
-    }
-    
+	}
+
 }
 add_filter( 'manage_edit-ucl_book_columns', 'uc_book_add_columns' );
 add_action( 'manage_ucl_book_posts_custom_column' , 'uc_book_get_column_value', 10, 2 );
@@ -370,8 +384,8 @@ add_action( 'manage_ucl_book_posts_custom_column' , 'uc_book_get_column_value', 
 
 // Customizations for the Metronet Reorder Podt Types plugin.
 function uc_reorder_custom_post_types( $post_types ) {
-    $post_types = array( 'ucl_agent' );
-    return $post_types;
+	$post_types = array( 'ucl_agent' );
+	return $post_types;
 }
 function uc_reorder_page_css() {
 	echo '<style>
@@ -404,22 +418,22 @@ function uc_author_metaboxes( $meta_boxes ) {
 		'show_names' => true, // Show field names on the left
 		'fields' => array(
 			array(
-                'name' => 'Photo',
-                'desc' => 'Upload a photo of the author at least 120 pixels wide.',
-                'id' => $prefix . 'author_photo',
-                'type' => 'file',
-                'save_id' => true, // save ID using true
-                'allow' => array( 'attachment' ) // allow url reference with array( 'url', 'attachment' )
-            ),
+				'name' => 'Photo',
+				'desc' => 'Upload a photo of the author at least 120 pixels wide.',
+				'id' => $prefix . 'author_photo',
+				'type' => 'file',
+				'save_id' => true, // save ID using true
+				'allow' => array( 'attachment' ) // allow url reference with array( 'url', 'attachment' )
+			),
 			array(
 				'name' => 'Bio',
 				'desc' => 'A description of the author\'s work and/or background.',
 				'id' => $prefix . 'author_bio',
-	            'type' => 'wysiwyg',
-	            'options' => array(
-	                'media_buttons' => false, // hide insert/upload button(s)
-	                'teeny' => true, // output the minimal editor config used in Press This
-	            ),
+				'type' => 'wysiwyg',
+				'options' => array(
+					'media_buttons' => false, // hide insert/upload button(s)
+					'teeny' => true, // output the minimal editor config used in Press This
+				),
 			),
 			array(
 				'name' => 'Website',
@@ -437,34 +451,74 @@ add_filter( 'cmb_meta_boxes', 'uc_author_metaboxes' );
 
 /**
  * Gets a number of terms and displays them as options
- * @param  string       $taxonomy Taxonomy terms to retrieve. Default is category.
- * @param  string|array $args     Optional. Change the defaults retrieving terms.
- * @return array                  An array of options that matches the CMB options array
+ * @param  string		$taxonomy Taxonomy terms to retrieve. Default is category.
+ * @param  string|array $args	  Optional. Change the defaults retrieving terms.
+ * @return array				  An array of options that matches the CMB options array
  */
 function cmb_get_term_options( $taxonomy = 'category', $args = array() ) {
 
-    $args['taxonomy'] = $taxonomy;
-    // $defaults = array( 'taxonomy' => 'category' );
-    $args = wp_parse_args( $args, array( 'taxonomy' => 'category' ) );
+	$args['taxonomy'] = $taxonomy;
+	// $defaults = array( 'taxonomy' => 'category' );
+	$args = wp_parse_args( $args, array( 'taxonomy' => 'category' ) );
 
-    $taxonomy = $args['taxonomy'];
+	$taxonomy = $args['taxonomy'];
 
-    $terms = (array) get_terms( $taxonomy, $args );
+	$terms = (array) get_terms( $taxonomy, $args );
 
-    // Initate an empty array
-    $term_options = array();
-    if ( ! empty( $terms ) ) {
-        foreach ( $terms as $term ) {
-            $term_options[ $term->slug ] = $term->name;
-        }
-    }
+	// Initate an empty array
+	$term_options = array();
+	if ( ! empty( $terms ) ) {
+		foreach ( $terms as $term ) {
+			$term_options[ $term->slug ] = $term->name;
+		}
+	}
 
-    return $term_options;
+	return $term_options;
+}
+
+/**
+ * Gets a number of posts and displays them as options
+ * @param  array  $query_args Optional. Overrides defaults.
+ * @return array  An array of options that matches the cmb2 options array
+ */
+function cmb2_get_post_options( $query_args ) {
+
+	$args = wp_parse_args( $query_args, array(
+		'post_type' => 'post',
+		'numberposts' => 10,
+	) );
+
+	$posts = get_posts( $args );
+
+	$post_options = array( array( 'name' => '', 'value' => '' ) );
+	if ( $posts ) {
+		foreach ( $posts as $post ) {
+			$post_options[] = array(
+			 'name' => $post->post_title,
+			 'value' => $post->ID
+			);
+		}
+	}
+
+	return $post_options;
 }
 
 
 // Custom fields for the Book content type.
 function uc_book_metaboxes( $meta_boxes ) {
+
+	// Get an alphabetical list of authors to use in the option select.
+	add_filter( 'posts_orderby' , 'posts_orderby_lastname' );
+	$author_names = cmb2_get_post_options(
+		array(
+			'post_type' =>	'ucl_author',
+			'orderby'		=>	'title',
+			'order'			=>	'ASC',
+			'numberposts' => -1,
+			'suppress_filters' => false,
+		)
+	);
+	remove_filter( 'posts_orderby' , 'posts_orderby_lastname' );
 
 	$prefix = '_uc_'; // Prefix for all fields
 	$meta_boxes[] = array(
@@ -476,50 +530,54 @@ function uc_book_metaboxes( $meta_boxes ) {
 		'show_names' => true, // Show field names on the left
 		'fields' => array(
 			array(
-				'name' => 'Author',
-				'desc' => 'The name of the author.',
-				'id' => $prefix . 'book_author',
-				'type' => 'text'
+				'name'    => 'Author',
+				'desc'    => "If you don't see the author here, first add them at Author->Add Author.",
+				'id'      => $prefix . 'book_author_id',
+				'type'    => 'select',
+				'options' => $author_names,
+				'default' => '-',
+				'repeatable' => true,
+				'after' => '<script>jQuery(".add-row-button").text("Add Author");</script>'
 			),
 			array(
-                'name' => 'Cover Image',
-                'desc' => 'Upload an image of the book cover at least 275 pixels wide.',
-                'id' => $prefix . 'book_cover_image',
-                'type' => 'file',
-                'save_id' => true, // save ID using true
-                'allow' => array( 'attachment' ) // allow url reference with array( 'url', 'attachment' )
-            ),
+				'name' => 'Cover Image',
+				'desc' => 'Upload an image of the book cover at least 275 pixels wide.',
+				'id' => $prefix . 'book_cover_image',
+				'type' => 'file',
+				'save_id' => true, // save ID using true
+				'allow' => array( 'attachment' ) // allow url reference with array( 'url', 'attachment' )
+			),
 			array(
 				'name' => 'Summary',
 				'desc' => 'A summary of the book\'s contents.',
 				'id' => $prefix . 'book_summary',
-	            'type' => 'wysiwyg',
-	            'options' => array(
-	                'media_buttons' => false, // hide insert/upload button(s)
-	              //  'teeny' => true, // output the minimal editor config used in Press This
-	            ),
+				'type' => 'wysiwyg',
+				'options' => array(
+					'media_buttons' => false, // hide insert/upload button(s)
+				  //  'teeny' => true, // output the minimal editor config used in Press This
+				),
 			),
 			array(
-	            'name' => 'Series',
-	            'desc' => 'The series the book is a part of, if any.',
-	            'id' => $prefix . 'book_series',
-	            'taxonomy' => 'book_series',
-	            'type' => 'taxonomy_select',
-                    'show_option_none' => '- None -'
-            ),
-            array(
-	            'name' => 'Genre',
-	            'id' => $prefix . 'book_genre',
-	            'taxonomy' => 'book_category',
-	            'type' => 'taxonomy_multicheck',	
-            ),
-            array(
-				'name'    => 'Homepage Carousel',
-				'desc'    => 'Show the cover on the home page slider (max 10 shown, ordered by date).',
+				'name' => 'Series',
+				'desc' => 'The series the book is a part of, if any.',
+				'id' => $prefix . 'book_series',
+				'taxonomy' => 'book_series',
+				'type' => 'taxonomy_select',
+					'show_option_none' => '- None -'
+			),
+			array(
+				'name' => 'Genre',
+				'id' => $prefix . 'book_genre',
+				'taxonomy' => 'book_category',
+				'type' => 'taxonomy_multicheck',
+			),
+			array(
+				'name'	  => 'Homepage Carousel',
+				'desc'	  => 'Show the cover on the home page slider (max 10 shown, ordered by date).',
 				'id' => $prefix . 'in_carousel',
 				'type' => 'checkbox'
 			),
-        )
+		)
 	);
 
 	return $meta_boxes;
@@ -538,29 +596,29 @@ function uc_agent_metaboxes( $meta_boxes ) {
 		'priority' => 'high',
 		'show_names' => true, // Show field names on the left
 		'fields' => array(
-		    array(
+			array(
 				'name' => 'Short Name',
 				'desc' => 'The name the agent normally goes by, usually a first name or nickname.',
 				'id' => $prefix . 'agent_short_name',
 				'type' => 'text'
 			),
 			array(
-                'name' => 'Photo',
-                'desc' => 'Upload a photo of the agent at least 120 pixels wide.',
-                'id' => $prefix . 'agent_photo',
-                'type' => 'file',
-                'save_id' => true, // save ID using true
-                'allow' => array( 'attachment' ) // allow url reference with array( 'url', 'attachment' )
-            ),
+				'name' => 'Photo',
+				'desc' => 'Upload a photo of the agent at least 120 pixels wide.',
+				'id' => $prefix . 'agent_photo',
+				'type' => 'file',
+				'save_id' => true, // save ID using true
+				'allow' => array( 'attachment' ) // allow url reference with array( 'url', 'attachment' )
+			),
 			array(
 				'name' => 'Bio',
 				'desc' => 'A description of the agent\'s background.',
 				'id' => $prefix . 'agent_bio',
-	            'type' => 'wysiwyg',
-	            'options' => array(
-	                'media_buttons' => false, // hide insert/upload button(s)
-	                //'teeny' => true, // output the minimal editor config used in Press This
-	            ),
+				'type' => 'wysiwyg',
+				'options' => array(
+					'media_buttons' => false, // hide insert/upload button(s)
+					//'teeny' => true, // output the minimal editor config used in Press This
+				),
 			),
 			array(
 				'name' => 'Email',
@@ -575,29 +633,29 @@ function uc_agent_metaboxes( $meta_boxes ) {
 				'type' => 'text'
 			),
 			array(
-	            'name' => 'Accepting Submissions?',
-	            'desc' => 'Check this box if the agent is currently accepting submissions.',
-	            'id' => $prefix . 'agent_accepting_submissions',
-	            'type' => 'checkbox'
-            ),
+				'name' => 'Accepting Submissions?',
+				'desc' => 'Check this box if the agent is currently accepting submissions.',
+				'id' => $prefix . 'agent_accepting_submissions',
+				'type' => 'checkbox'
+			),
 			array(
 				'name' => 'Submission Email',
 				'desc' => 'The agent\'s email for submissions (only diplayed if currently '
-				    . 'accepting submissions).',
+					. 'accepting submissions).',
 				'id' => $prefix . 'agent_submissions_email',
 				'type' => 'text'
 			),
 			array(
-	            'name' => 'Tastes',
-	            'desc' => 'A description of the agent\'s literary tastes (only diplayed if '
-				    . 'currently accepting submissions).',
-	            'id' => $prefix . 'agent_tastes',
-	            'type' => 'wysiwyg',
-	            'options' => array(
-	                'media_buttons' => false, // hide insert/upload button(s)
-	                //'teeny' => true, // output the minimal editor config used in Press This
-	            ),
-            ),
+				'name' => 'Tastes',
+				'desc' => 'A description of the agent\'s literary tastes (only diplayed if '
+					. 'currently accepting submissions).',
+				'id' => $prefix . 'agent_tastes',
+				'type' => 'wysiwyg',
+				'options' => array(
+					'media_buttons' => false, // hide insert/upload button(s)
+					//'teeny' => true, // output the minimal editor config used in Press This
+				),
+			),
 		),
 	);
 
@@ -608,12 +666,12 @@ add_filter( 'cmb_meta_boxes', 'uc_agent_metaboxes' );
 
 // Initialize the metabox class
 if( ! function_exists( 'be_initialize_cmb_meta_boxes' ) ) {
-    add_action( 'init', 'be_initialize_cmb_meta_boxes', 9999 );
-    function be_initialize_cmb_meta_boxes() {
-        if ( !class_exists( 'cmb_Meta_Box' ) ) {
-            require_once( 'lib/metabox/init.php' );
-        }
-    }
+	add_action( 'init', 'be_initialize_cmb_meta_boxes', 9999 );
+	function be_initialize_cmb_meta_boxes() {
+		if ( !class_exists( 'cmb_Meta_Box' ) ) {
+			require_once( 'lib/metabox/init.php' );
+		}
+	}
 }
 
 
@@ -639,64 +697,185 @@ add_action( 'widgets_init', 'remove_parent_widget_areas', 11 );
 // [agents_accepting_submissions] shortcode to display Agent fields when accepting book submissions.
 function agents_accepting_submissions_shortcode() {
 
-    $result = '';
-    $post_args = array( 'post_type' => 'ucl_agent' );
-    $posts_array = get_posts( $post_args );
-    
-    foreach ($posts_array as $post) {
-    
-        $post_id = $post->ID;
-        $accepting_submissions = get_post_meta(
-            $post_id,
-            '_uc_agent_accepting_submissions',
-            true
-        );
-        
-        if ( $accepting_submissions ) {
-        
-            $short_name = get_post_meta( $post_id, '_uc_agent_short_name', true );
-            $accepting_submissions = get_post_meta( $post_id, '_uc_agent_accepting_submissions', true );
-            $submissions_email = get_post_meta( $post_id, '_uc_agent_submissions_email', true );
-            $tastes = get_post_meta( $post_id, '_uc_agent_tastes', true );
-            $tastes = apply_filters( 'the_content', $tastes );
-            
-            $result .= "<hr /><h4><strong><a href='{$post->guid}'>{$post->post_title}</a></strong></h4>";
-            
-            if ( $tastes ) {
-			    $result .= "<div class='tastes'><h5>A bit about {$short_name}'s tastes</h5>";
-			    $result .= "{$tastes}</div>";
+	$result = '';
+	$post_args = array( 'post_type' => 'ucl_agent' );
+	$posts_array = get_posts( $post_args );
+
+	foreach ($posts_array as $post) {
+
+		$post_id = $post->ID;
+		$accepting_submissions = get_post_meta(
+			$post_id,
+			'_uc_agent_accepting_submissions',
+			true
+		);
+
+		if ( $accepting_submissions ) {
+
+			$short_name = get_post_meta( $post_id, '_uc_agent_short_name', true );
+			$accepting_submissions = get_post_meta( $post_id, '_uc_agent_accepting_submissions', true );
+			$submissions_email = get_post_meta( $post_id, '_uc_agent_submissions_email', true );
+			$tastes = get_post_meta( $post_id, '_uc_agent_tastes', true );
+			$tastes = apply_filters( 'the_content', $tastes );
+
+			$result .= "<hr /><h4><strong><a href='{$post->guid}'>{$post->post_title}</a></strong></h4>";
+
+			if ( $tastes ) {
+				$result .= "<div class='tastes'><h5>A bit about {$short_name}'s tastes</h5>";
+				$result .= "{$tastes}</div>";
 			}
-			
+
 			if ( $submissions_email ) {
-			    $link_text = 'Submit to ' . $short_name . ' >>';
-			    $result .= '<h5>' . get_safe_email( $submissions_email, $link_text ) . '</h5>';
+				$link_text = 'Submit to ' . $short_name . ' >>';
+        $copy_text = 'Copy address to clipboard';
+				$result .= '<h5>' . get_safe_email( $submissions_email, $link_text ) . '</h5>';
+        $result .= '<em>Email not opening? '
+          . get_safe_email_copy_link( $submissions_email, $copy_text ) . '.</em>';
 			}
-        }
-    }
-    wp_reset_postdata();
-    
-    if( ! $result )
-        $result = '<hr /><p><strong>No agents are currently accepting submissions.</strong></p>';
-    
-    return '' . $result . '<hr />';
+		}
+	}
+	wp_reset_postdata();
+
+	if( ! $result )
+		$result = '<hr /><p><strong>No agents are currently accepting submissions.</strong></p>';
+
+	return '' . $result . '<hr />';
 }
 add_shortcode( 'agents_accepting_submissions', 'agents_accepting_submissions_shortcode' );
 
 
 // Order the list of authors by last name.
 function posts_orderby_lastname( $orderby_statement ) {
-    $orderby_statement = "RIGHT(post_title, LOCATE(' ', REVERSE(post_title)) - 1) ASC";
-    return $orderby_statement;
+	$orderby_statement = "RIGHT(post_title, LOCATE(' ', REVERSE(post_title)) - 1) ASC";
+	return $orderby_statement;
 }
 
 // Order the list of books by title, ignoring "A", "An", and "The".
 function posts_orderby_book_title( $orderby_statement ) {
-    $orderby_statement = "TRIM(LEADING 'a ' FROM TRIM(LEADING 'an ' FROM "
-    	. "TRIM(LEADING 'the ' FROM LOWER(ucl_posts.post_title)))) ASC";
-    return $orderby_statement;
+	$orderby_statement = "TRIM(LEADING 'a ' FROM TRIM(LEADING 'an ' FROM "
+		. "TRIM(LEADING 'the ' FROM LOWER(ucl_posts.post_title)))) ASC";
+	return $orderby_statement;
 }
 
-// Displays the previous and next links at the bottom of the 
+// Displays the alphabetical links at the top and bottom of the /authors/ page.
+function main_author_pagination() {
+
+	$args = array(
+		'post_type' =>	'ucl_author',
+		'orderby'		=>	'title',
+		'order'			=>	'ASC',
+		'numberposts' => -1,
+		'suppress_filters' => false,
+	);
+	add_filter( 'posts_orderby' , 'posts_orderby_lastname' );
+	$posts = get_posts($args);
+	remove_filter( 'posts_orderby' , 'posts_orderby_lastname' );
+
+	$count = 0;
+	$last_letter = "A";
+	$authors = array();
+	$letter_group = array();
+	$sorted_posts = array();
+	$authors_this_page = array();
+	$last_index = count($posts) - 1;
+	$authors_page = site_url( '/authors' );
+	$author_group = get_query_var( 'group' );
+	$nav = '<div class="blog-navigation paginate-links">';
+
+	foreach($posts as $index=>$p) {
+		$count++;
+
+		// Get the first letter of the author's last name.
+		$str = $p->post_title;
+		$last_name_start = strrpos( $str, " " ) + 1;
+		$this_letter = strtoupper( substr( $str, $last_name_start, 1 ) );
+
+		// Group the posts into arrays based on last name.
+		if( $this_letter == $last_letter ) {
+			$authors[] = $p;
+		}
+		else {
+			$letter_group[$last_letter] = $authors;
+
+			if( $count > 7 ) {
+
+				list( $sorted_posts, $authors_this_page, $nav ) = package_authors(
+					$sorted_posts, $letter_group, $author_group, $authors_this_page, $nav );
+
+				$letter_group = array();
+				$count = 0;
+			}
+			$authors = array( $p );
+		}
+
+		// Special case for the last post.
+		if( $index == $last_index ) {
+			if( $this_letter == $last_letter ) {
+				$authors[] = $p;
+			}
+			else {
+				$authors = array( $p );
+			}
+
+			$letter_group[$this_letter] = $authors;
+			list( $sorted_posts, $authors_this_page, $nav ) = package_authors(
+				$sorted_posts, $letter_group, $author_group, $authors_this_page, $nav );
+		}
+
+		$last_letter = $this_letter;
+	}
+
+	$nav .= '</div>';
+
+	// Redirect to the main authors page if the query string did not indicate
+	// a group of authors (i.e. it was an old bookmark).
+	if( $author_group && ! array_key_exists( $author_group, $sorted_posts ) ) {
+		wp_safe_redirect( $authors_page );
+	}
+
+	return array( $authors_this_page, $nav );
+}
+// Helper function for main_author_pagination().
+function package_authors(
+	$sorted_posts, $letter_group, $author_group, $authors_this_page, $nav ) {
+
+	// Generate a title (i.e."A-D") using the first and last keys of the group.
+	reset($letter_group);
+	$group_title =	key($letter_group);
+	end($letter_group);
+	$last_key = key($letter_group);
+	if( $group_title != $last_key ) {
+		$group_title .= "-" . $last_key;
+	}
+	$sorted_posts[$group_title] = $letter_group;
+
+	if( ( ! $author_group && count( $sorted_posts ) == 1 )
+			|| $group_title == $author_group ) {
+
+		// Prep the current page's posts for use in the Loop.
+		foreach($letter_group as $group) {
+			foreach($group as $author) {
+				$authors_this_page[] = $author;
+			}
+		}
+
+		$nav .= '<span class="letter-group current">' . $group_title . '</span>';
+	}
+	else {
+		$nav .= '<a class="letter-group' . '" href="' . $authors_page
+			. '?group=' . $group_title . '">' . $group_title . '</a>';
+	}
+	return array( $sorted_posts, $authors_this_page, $nav );
+}
+
+// URL arguments added here will be available through get_query_var().
+function add_query_vars_filter( $vars ){
+	$vars[] = 'group';
+	return $vars;
+}
+add_filter( 'query_vars', 'add_query_vars_filter' );
+
+// Displays the previous and next links at the bottom of the
 // single Author pages.
 function author_pagination_links() {
 	$args = array(
@@ -716,7 +895,7 @@ function author_pagination_links() {
 		if($id == $p->ID) break;
 		$i++;
 	}
-	
+
 	$n = count($posts);
 	if($i - 1 >= 0) {
 		$prev = '<div class="alignleft">'
@@ -736,7 +915,7 @@ function author_pagination_links() {
 			. '<a href="' . get_permalink($posts[0]->ID) . '">'
 			. $posts[0]->post_title . '</a></div>';
 	}
-	
+
 	echo '<div class="blog-navigation">' . $prev . $next . '</div>';
 }
 
@@ -759,7 +938,7 @@ function book_pagination_links() {
 		if($id == $p->ID) break;
 		$i++;
 	}
-	
+
 	$n = count($posts);
 	if($i - 1 >= 0) {
 		$prev = '<div class="alignleft">'
@@ -779,7 +958,7 @@ function book_pagination_links() {
 			. '<a href="' . get_permalink($posts[0]->ID) . '">'
 			. $posts[0]->post_title . '</a></div>';
 	}
-	
+
 	echo '<div class="blog-navigation">' . $prev . $next . '</div>';
 }
 
@@ -787,15 +966,15 @@ function book_pagination_links() {
 function homepage_twitter_area()  {
 
 	$args = array(
-		'id'            => 'twitter_area',
-		'name'          => __( 'Homepage Twitter Area', 'okay' ),
-		'description'   => __( 'The Twitter widget goes here and will be shown on the homepage.',
-		                'okay' ),
-		'class'         => 'twitter-area',
-		'before_title'  => '<h2>',
-		'after_title'   => '</h2>',
+		'id'			=> 'twitter_area',
+		'name'			=> __( 'Homepage Twitter Area', 'okay' ),
+		'description'	=> __( 'The Twitter widget goes here and will be shown on the homepage.',
+						'okay' ),
+		'class'			=> 'twitter-area',
+		'before_title'	=> '<h2>',
+		'after_title'	=> '</h2>',
 		'before_widget' => '',
-		'after_widget'  => '',
+		'after_widget'	=> '',
 	);
 	register_sidebar( $args );
 }
@@ -823,7 +1002,7 @@ class Latest_Books_Widget extends WP_Widget {
 	 *
 	 * @see WP_Widget::widget()
 	 *
-	 * @param array $args     Widget arguments.
+	 * @param array $args	  Widget arguments.
 	 * @param array $instance Saved values from database.
 	 */
 	public function widget( $args, $instance ) {
@@ -831,45 +1010,46 @@ class Latest_Books_Widget extends WP_Widget {
 		echo $args['before_widget'];
 		if ( ! empty( $title ) )
 			echo $args['before_title'] . $title . $args['after_title'];
-			
+
 ?>
 
 	<div id="portfolio-sidebar" class="portfolio-sidebar flexslider">
-	    <ul class="slides">
+		<ul class="slides">
 
-	        <?php
-                $post_args = array( 'post_type' => 'ucl_book', 'posts_per_page' => 5 );
-                $posts_array = get_posts( $post_args );
-                foreach ($posts_array as $post) {
-                    $cover_image_id = get_post_meta( $post->ID, '_uc_book_cover_image_id', true );
-                    $cover_image = wp_get_attachment_image( $cover_image_id, array(200, 300) );
-                    if ( $cover_image ) {
-            ?>
-            
-            <li class="flex-active-slide">
-	            <a href="<?php echo $post->guid; ?>" title="<?php echo $post->post_title; ?>" class="blog-image">
-	                <?php echo $cover_image; ?>
-	            </a>
-	        </li>
+			<?php
+				$post_args = array( 'post_type' => 'ucl_book', 'posts_per_page' => 5 );
+				$posts_array = get_posts( $post_args );
+				foreach ($posts_array as $post) {
+					$cover_image_id = get_post_meta( $post->ID, '_uc_book_cover_image_id', true );
+					$cover_image = wp_get_attachment_image( $cover_image_id, array(200, 300) );
+					if ( $cover_image ) {
+			?>
 
-            <?php
-                    }
-                }
-            ?>
+			<li class="flex-active-slide">
+				<a href="<?php echo $post->guid; ?>" title="<?php echo $post->post_title; ?>"
+					class="blog-image">
+					<?php echo $cover_image; ?>
+				</a>
+			</li>
 
-         </ul>
-	     <ol class="flex-control-nav flex-control-paging">
-	        <li><a class="flex-active">1</a></li><li><a>2</a></li>
-	        <li><a>3</a></li><li><a>4</a></li><li><a>5</a></li>
-	     </ol>
-	     <ul class="flex-direction-nav">
-	        <li><a class="flex-prev" href="#">Previous</a></li>
-	        <li><a class="flex-next" href="#">Next</a></li>
-	     </ul>
+			<?php
+					}
+				}
+			?>
+
+		 </ul>
+		 <ol class="flex-control-nav flex-control-paging">
+			<li><a class="flex-active">1</a></li><li><a>2</a></li>
+			<li><a>3</a></li><li><a>4</a></li><li><a>5</a></li>
+		 </ol>
+		 <ul class="flex-direction-nav">
+			<li><a class="flex-prev" href="#">Previous</a></li>
+			<li><a class="flex-next" href="#">Next</a></li>
+		 </ul>
 	</div>
-			
+
 <?php
-		
+
 		echo $args['after_widget'];
 	}
 
@@ -889,10 +1069,12 @@ class Latest_Books_Widget extends WP_Widget {
 		}
 		?>
 		<p>
-		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
-		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
+			name="<?php echo $this->get_field_name( 'title' ); ?>" type="text"
+			value="<?php echo esc_attr( $title ); ?>" />
 		</p>
-		<?php 
+		<?php
 	}
 
 	/**
@@ -936,18 +1118,18 @@ class Blog_Category_Filter_Widget extends WP_Widget {
 	 *
 	 * @see WP_Widget::widget()
 	 *
-	 * @param array $args     Widget arguments.
+	 * @param array $args	  Widget arguments.
 	 * @param array $instance Saved values from database.
 	 */
 	public function widget( $args, $instance ) {
-	
-	    $title = apply_filters( 'widget_title', $instance['title'] );
-	    $cat_id = get_query_var('cat');
-	    $cat_args = array(
-	        'show_option_none' => ( $title ? $title : 'Category' ),
-            'show_option_all'  => 'All Categories',
-            'selected'         => ( $cat_id ? $cat_id : -1 )
-	    );
+
+		$title = apply_filters( 'widget_title', $instance['title'] );
+		$cat_id = get_query_var('cat');
+		$cat_args = array(
+			'show_option_none' => ( $title ? $title : 'Category' ),
+			'show_option_all'  => 'All Categories',
+			'selected'		   => ( $cat_id ? $cat_id : -1 )
+		);
 		echo $args['before_widget'];
 		wp_dropdown_categories( $cat_args );
 		echo $args['after_widget'];
@@ -969,10 +1151,12 @@ class Blog_Category_Filter_Widget extends WP_Widget {
 		}
 		?>
 		<p>
-		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
-		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
+			name="<?php echo $this->get_field_name( 'title' ); ?>" type="text"
+			value="<?php echo esc_attr( $title ); ?>" />
 		</p>
-		<?php 
+		<?php
 	}
 
 	/**
@@ -997,7 +1181,7 @@ class Blog_Category_Filter_Widget extends WP_Widget {
 
 // Register custom widgets.
 function uc_register_custom_widgets() {
-    register_widget( 'Latest_Books_Widget' );
-    register_widget( 'Blog_Category_Filter_Widget' );
+	register_widget( 'Latest_Books_Widget' );
+	register_widget( 'Blog_Category_Filter_Widget' );
 }
 add_action( 'widgets_init', 'uc_register_custom_widgets' );

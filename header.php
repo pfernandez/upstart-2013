@@ -24,7 +24,7 @@
 
 
 <?php 
-    $is_5th_anniversary = is_page_template( "home.php" );
+    $is_5th_anniversary = false; // is_page_template( "home.php" );
     if( $is_5th_anniversary ): ?>
 
 	<!-- Video goes here, more at bottom of file -->

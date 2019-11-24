@@ -51,6 +51,14 @@ h3 a,
     font-size: 24px;
 }
 
+.page-title h3 a {
+    margin-right: 30px;
+}
+
+.page-title h3 a:hover {
+    opacity: 0.85;
+}
+
 h4 {
     font-size: 20px;
 }
@@ -181,6 +189,12 @@ h5 {
     border-bottom: solid 1px #999;
 }
 
+.blog-meta ul {
+    width: 100%;
+	margin-left: 0;
+	direction: rtl;
+}
+
 .page-title h3 {
     clear: left;
 }
@@ -225,6 +239,15 @@ h5 {
     -webkit-font-smoothing: antialiased;
     content: "\f0da";
     margin-left: 5px;
+}
+
+.blog-navigation a.prev:hover,
+.blog-navigation a.next:hover {
+	opacity: 0.7;
+}
+
+.letter-group {
+	margin-right: 10px;
 }
 
 blockquote {
@@ -470,7 +493,11 @@ div.read-more a {
     font-size: 18px;
 }
 
-.single-ucl_book .blog-navigation {
+.book-tile-inner h4 {
+    margin-bottom: 0;
+}
+
+.post-single .blog-navigation {
     margin-top: 40px;
 }
 
@@ -478,9 +505,15 @@ div.read-more a {
     margin-top: 40px;
 }
 
-.single-ucl_book .content .book-series .blog-image {
+.post-single .content .book-series .blog-image {
     max-width: 151px;
     margin: 0 20px 10px 0;
+    height: 250px;
+		overflow: hidden;
+}
+
+.post-single div.blog-image img:hover {
+    opacity: 1;
 }
 
 /**
@@ -528,6 +561,11 @@ div.read-more a {
     margin: 0 20px 10px 0;
 }
 
+#blog-page .wp-caption, 
+#blog-page img:not(.attachment-blog-image) {
+	display: none;
+}
+
 #searchform {
 	margin-bottom: 10px;
 }
@@ -535,6 +573,17 @@ div.read-more a {
 #blog-page .page-title,
 .single-post .page-title {
 	padding: 30px 0 20px 0;
+}
+
+/**
+ * Authors page
+ */
+.page-template-authors-php .blog-navigation {
+	
+}
+ 
+.page-template-authors-php .blog-image {
+	margin-top: 9px;
 }
 
 /**
@@ -837,6 +886,12 @@ div.tb_tweetlist {
     color: #f2f2ec;
 }
 
+.search-404 #searchform {
+  margin: 30px auto;
+  float: none;
+  padding-bottom: 40px;
+}
+
 
 /**
  * Responsive Styles
@@ -872,7 +927,7 @@ div.tb_tweetlist {
         width: 33.3%;
     }
 
-    .single-ucl_book .content .blog-image {
+    .post-single .content .blog-image {
         width: auto;
         margin: 0 30px 0px 0;
     } 

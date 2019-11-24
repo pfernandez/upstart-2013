@@ -23,7 +23,10 @@
 			<?php } else { ?>
 			
 				<?php if ( has_post_thumbnail() ) { ?>
-					<a class="blog-image" href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php the_post_thumbnail( 'blog-image' ); ?></a>
+					<a class="blog-image" href="<?php the_permalink(); ?>" 
+						title="<?php the_title(); ?>">
+						<?php the_post_thumbnail( 'blog-image' ); ?>
+					</a>
 				<?php } ?>
 			
 			<?php } ?>
@@ -35,30 +38,17 @@
 		<?php endif; ?>
 
         <?php
-            // Override the $wp_query with our custom query to allow for pagination.
-            $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-            $args = array(
-                'post_type' => 'ucl_author',
-                'posts_per_page' => 10,
-                'paged' => $paged,
-                'orderby' => 'title',
-            );
-            global $wp_query;
-            $temp = $wp_query; // store original query for later use
-            $wp_query = null;
-            add_filter( 'posts_orderby' , 'posts_orderby_lastname' );
-            $wp_query = new WP_Query( $args );
-            remove_filter( 'posts_orderby' , 'posts_orderby_lastname' );
-        ?>
-                
-        <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
         
-        <?php
-            $post_id = get_the_ID();
-            $image_id = get_post_meta( $post_id, '_uc_author_photo_id', true );
-            $image = wp_get_attachment_image( $image_id, array(105, 145) );
-            $bio = get_post_meta( $post_id, '_uc_author_bio', true );
-            $website = get_post_meta( $post_id, '_uc_author_website', true );
+        	list( $posts, $nav ) = main_author_pagination();
+        	echo $nav;
+        
+            foreach ( $posts as $post ) : setup_postdata( $post );
+            
+		        $post_id = get_the_ID();
+		        $image_id = get_post_meta( $post_id, '_uc_author_photo_id', true );
+		        $image = wp_get_attachment_image( $image_id, array(105, 145) );
+		        $bio = get_post_meta( $post_id, '_uc_author_bio', true );
+		        $website = get_post_meta( $post_id, '_uc_author_website', true );
         ?>                                                            
 
         <div id="post-<?php echo $post_id ?>" <?php post_class('blog-post clearfix'); ?>>
@@ -93,26 +83,13 @@
                 <?php } ?>
             </div>
             
+            
         </div><!-- blog post -->
 
-        <?php endwhile; endif; ?>
+        <?php endforeach; wp_reset_postdata(); ?>
 
         <!-- Post navigation -->
-        <?php if( okay_page_has_nav() ) : ?>
-            <div class="blog-navigation paginate-links">
-                <?php
-                    echo paginate_links( array(
-	                    'base' => str_replace( 99999, '%#%',
-	                        esc_url( get_pagenum_link( 99999 ) ) ),
-	                    'format' => '?paged=%#%',
-	                    'current' => max( 1, get_query_var('paged') ),
-	                    'total' => $wp_query->max_num_pages,
-	                    'prev_text'    => __('Previous'),
-	                    'next_text'    => __('Next'),
-                    ) );
-                ?>
-            </div>
-        <?php endif; ?>
+        <?php echo $nav; ?>
 
 		<?php $wp_query = $temp; // reset back to original query ?>
 

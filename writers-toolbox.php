@@ -46,7 +46,7 @@
     <div id="sections" class="clearfix">
         <div id="visit-our-bookshelf">
             <h3>Visit our Bookshelf for Writers</h3>
-            <a href="http://upstartcrow.artsdigital.co/bookshelf-writers-editors/">
+            <a href="<?php echo site_url(); ?>/bookshelf-writers-editors/">
                 Hone your craft. See our Recommendations >>
             </a>
         </div>
